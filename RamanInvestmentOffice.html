@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raman's Investment Office</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+:root {
+  --bg:#080C12;--surface:#0D1117;--card:#111820;--card2:#151E28;
+  --border:#1E2D3D;--border2:#243040;--gold:#E3A945;--gold-dim:#8A6420;
+  --green:#2ECC71;--green-dim:#1A5E35;--red:#E74C3C;--red-dim:#5E1A1A;
+  --blue:#4A9EFF;--blue-dim:#1A3A5E;--orange:#F39C12;--grey:#5A7A8A;
+  --text:#C8D8E8;--text-dim:#4A6070;--white:#EEF4F8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* TICKER */
+.ticker-wrap{background:var(--surface);border-bottom:1px solid var(--border);overflow:hidden;padding:8px 0;}
+.ticker{display:flex;gap:48px;animation:ticker 35s linear infinite;white-space:nowrap;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{font-family:'Space Mono',monospace;font-size:11px;color:var(--grey);display:flex;gap:8px;align-items:center;}
+.ticker-item .name{color:var(--text);font-weight:600;}
+.ticker-item .up{color:var(--green);}
+.ticker-item .down{color:var(--red);}
+
+/* HEADER */
+header{padding:24px 40px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;}
+.logo-area h1{font-size:22px;font-weight:700;color:var(--white);letter-spacing:-0.5px;}
+.logo-area p{font-size:12px;color:var(--grey);margin-top:4px;font-family:'Space Mono',monospace;}
+.header-meta{font-family:'Space Mono',monospace;font-size:11px;color:var(--grey);text-align:right;}
+.header-meta span{color:var(--gold);}
+
+/* NAV */
+nav{display:flex;padding:0 40px;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto;}
+.tab{padding:13px 18px;font-size:11px;font-weight:600;color:var(--grey);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;letter-spacing:0.5px;text-transform:uppercase;white-space:nowrap;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* PAGES */
+.page{display:none;padding:28px 40px;}
+.page.active{display:block;}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:24px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 14px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi.gold::before{background:var(--gold)}.kpi.green::before{background:var(--green)}
+.kpi.blue::before{background:var(--blue)}.kpi.red::before{background:var(--red)}
+.kpi.orange::before{background:var(--orange)}.kpi.grey::before{background:var(--grey)}
+.kpi.purple::before{background:#9B59B6}
+.kpi-label{font-size:9px;font-weight:600;color:var(--grey);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.kpi-value{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--white);line-height:1;}
+.kpi-value.green{color:var(--green)}.kpi-value.gold{color:var(--gold)}.kpi-value.red{color:var(--red)}.kpi-value.orange{color:var(--orange)}.kpi-value.blue{color:var(--blue)}
+.kpi-sub{font-size:9px;color:var(--grey);margin-top:5px;font-family:'Space Mono',monospace;}
+
+/* PROGRESS */
+.progress-section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin-bottom:24px;}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.progress-title{font-size:11px;font-weight:600;color:var(--grey);letter-spacing:1px;text-transform:uppercase;}
+.progress-pct{font-family:'Space Mono',monospace;font-size:13px;color:var(--gold);font-weight:700;}
+.progress-track{background:var(--surface);border-radius:4px;height:8px;overflow:hidden;margin-bottom:8px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:4px;width:0%;transition:width 1.2s ease;}
+.progress-labels{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--grey);}
+.progress-labels span{color:var(--text);}
+
+/* LAYOUT */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px;}
+.four-col{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+
+/* CARDS */
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;}
+.section-head{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.section-head h3{font-size:11px;font-weight:700;color:var(--grey);letter-spacing:1px;text-transform:uppercase;}
+
+/* BADGE */
+.badge{font-size:9px;font-family:'Space Mono',monospace;padding:3px 7px;border-radius:3px;}
+.badge-core{background:#0D3B1F;color:#2ECC71;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-hold{background:#1A3A5E;color:#4A9EFF;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-exit{background:#5E1A1A;color:#E74C3C;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-watch{background:#4A3000;color:#F39C12;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-writeoff{background:#222;color:#5A7A8A;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-done{background:#0D3B1F;color:#2ECC71;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-wait{background:#4A3000;color:#F39C12;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-cond{background:#1A3A5E;color:#4A9EFF;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-high{background:#5E1A1A;color:#E74C3C;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-med{background:#4A3000;color:#F39C12;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+.badge-low{background:#0D3B1F;color:#2ECC71;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;}
+
+/* TABLES */
+.mini-table{width:100%;border-collapse:collapse;}
+.mini-table tr{border-bottom:1px solid var(--border);}
+.mini-table tr:last-child{border-bottom:none;}
+.mini-table tr:hover{background:var(--card2);}
+.mini-table td{padding:9px 18px;font-size:12px;color:var(--text);}
+.mini-table td:first-child{font-weight:600;color:var(--white);}
+.mini-table td.mono{font-family:'Space Mono',monospace;font-size:11px;}
+.mini-table td.green{color:var(--green);font-family:'Space Mono',monospace;font-size:11px;}
+.mini-table td.red{color:var(--red);font-family:'Space Mono',monospace;font-size:11px;}
+.mini-table td.gold{color:var(--gold);font-family:'Space Mono',monospace;font-size:11px;}
+.mini-table td.grey{color:var(--grey);font-size:11px;}
+
+.full-table{width:100%;border-collapse:collapse;}
+.full-table thead tr{background:var(--surface);}
+.full-table thead th{padding:10px 12px;text-align:left;font-size:9px;font-weight:700;color:var(--grey);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+.full-table thead th.right{text-align:right;}
+.full-table tbody tr{border-bottom:1px solid var(--border);transition:background 0.15s;}
+.full-table tbody tr:hover{background:var(--card2);}
+.full-table tbody td{padding:9px 12px;font-size:12px;color:var(--text);}
+.full-table tbody td.stock-name{font-weight:700;color:var(--white);}
+.full-table tbody td.mono{font-family:'Space Mono',monospace;font-size:11px;text-align:right;}
+.full-table tbody td.pos{color:var(--green);font-family:'Space Mono',monospace;font-size:11px;text-align:right;}
+.full-table tbody td.neg{color:var(--red);font-family:'Space Mono',monospace;font-size:11px;text-align:right;}
+.full-table tbody td.gold{color:var(--gold);font-family:'Space Mono',monospace;font-size:11px;text-align:right;}
+.full-table tbody td.note{font-size:10px;color:var(--grey);font-style:italic;}
+.full-table tfoot tr{background:var(--surface);border-top:2px solid var(--border2);}
+.full-table tfoot td{padding:11px 12px;font-size:12px;font-weight:700;color:var(--gold);font-family:'Space Mono',monospace;text-align:right;}
+.full-table tfoot td:first-child{text-align:left;}
+.table-wrap{overflow-x:auto;}
+
+/* HEALTH GRID */
+.health-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.health-item{padding:11px 18px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.health-item:nth-child(even){border-right:none;}
+.health-label{font-size:10px;color:var(--grey);}
+.health-value{font-size:11px;font-weight:600;color:var(--text);font-family:'Space Mono',monospace;}
+.health-icon{font-size:13px;margin-left:8px;}
+
+/* ACTIONS */
+.action-list{padding:4px 0;}
+.action-item{display:flex;gap:13px;align-items:flex-start;padding:13px 18px;border-bottom:1px solid var(--border);}
+.action-item:last-child{border-bottom:none;}
+.action-check{width:18px;height:18px;border-radius:3px;border:2px solid var(--border2);flex-shrink:0;margin-top:1px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.action-check:hover{border-color:var(--gold);}
+.action-check.checked{background:var(--green-dim);border-color:var(--green);}
+.action-check.checked::after{content:'✓';color:var(--green);font-size:11px;font-weight:700;}
+.action-content{flex:1;}
+.action-title{font-size:12px;font-weight:600;color:var(--white);margin-bottom:3px;}
+.action-desc{font-size:11px;color:var(--grey);}
+.action-meta{display:flex;gap:10px;margin-top:5px;align-items:center;}
+.action-when{font-size:10px;color:var(--orange);font-family:'Space Mono',monospace;}
+.action-amt{font-size:10px;color:var(--green);font-family:'Space Mono',monospace;}
+
+/* WATCHLIST */
+.wl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px;}
+.wl-card{background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:14px;}
+.wl-card:hover{border-color:var(--border2);}
+.wl-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px;}
+.wl-sector{font-size:10px;color:var(--grey);margin-bottom:8px;}
+.wl-row{display:flex;justify-content:space-between;margin-bottom:4px;}
+.wl-key{font-size:10px;color:var(--grey);}
+.wl-val{font-size:11px;font-family:'Space Mono',monospace;color:var(--text);}
+.wl-val.gold{color:var(--gold);}.wl-val.green{color:var(--green);}
+.wl-thesis{font-size:10px;color:var(--grey);font-style:italic;margin-top:9px;line-height:1.4;border-top:1px solid var(--border);padding-top:7px;}
+
+/* PLAN */
+.plan-steps{padding:4px 0;}
+.plan-step{display:grid;grid-template-columns:36px 130px 1fr auto;gap:12px;align-items:start;padding:13px 18px;border-bottom:1px solid var(--border);}
+.plan-step:last-child{border-bottom:none;}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--gold-dim);color:var(--gold);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-title{font-size:12px;font-weight:700;color:var(--white);margin-bottom:2px;}
+.step-when{font-size:10px;color:var(--gold);font-family:'Space Mono',monospace;}
+.step-desc{font-size:11px;color:var(--grey);line-height:1.5;}
+.step-outcome{font-size:10px;color:var(--green);font-style:italic;white-space:nowrap;}
+
+/* PROJECTION */
+.proj-grid{display:grid;grid-template-columns:80px repeat(4,1fr);gap:1px;background:var(--border);border-radius:6px;overflow:hidden;}
+.proj-cell{background:var(--card);padding:11px 13px;font-family:'Space Mono',monospace;font-size:11px;}
+.proj-cell.head{background:var(--surface);font-size:9px;font-weight:700;color:var(--grey);letter-spacing:0.5px;text-transform:uppercase;}
+.proj-cell.year{color:var(--grey);font-size:10px;}
+.proj-cell.base{color:var(--grey);}.proj-cell.mod{color:var(--blue);}
+.proj-cell.tgt{color:var(--gold);}.proj-cell.str{color:var(--green);}
+.proj-cell.hit{background:var(--green-dim);color:var(--green);font-weight:700;}
+
+/* CALENDAR */
+.cal-item{display:grid;grid-template-columns:100px 1fr auto;gap:12px;align-items:center;padding:11px 18px;border-bottom:1px solid var(--border);}
+.cal-item:last-child{border-bottom:none;}
+.cal-date{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);}
+.cal-co{font-size:12px;font-weight:600;color:var(--white);}
+.cal-note{font-size:10px;color:var(--grey);margin-top:2px;}
+
+/* CIO NOTE */
+.cio-note{background:linear-gradient(135deg,#1A1500,#0D1117);border:1px solid var(--gold-dim);border-left:3px solid var(--gold);border-radius:6px;padding:16px 20px;margin-top:14px;}
+.cio-label{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.cio-text{font-size:12px;color:var(--text);line-height:1.7;}
+
+/* SEARCH */
+.search-wrap{padding:10px 16px;border-bottom:1px solid var(--border);}
+.search-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:7px 12px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:12px;outline:none;}
+.search-input:focus{border-color:var(--border2);}
+
+/* CALCULATOR */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:20px;}
+.calc-box{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:20px;}
+.calc-title{font-size:12px;font-weight:700;color:var(--white);margin-bottom:16px;letter-spacing:0.5px;}
+.calc-field{margin-bottom:14px;}
+.calc-label{font-size:10px;color:var(--grey);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:5px;}
+.calc-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:9px 12px;color:var(--white);font-family:'Space Mono',monospace;font-size:13px;outline:none;}
+.calc-input:focus{border-color:var(--gold);}
+.calc-btn{width:100%;padding:11px;background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold);border-radius:5px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:all 0.2s;}
+.calc-btn:hover{background:var(--gold);color:var(--bg);}
+.calc-result{margin-top:14px;padding:14px;background:var(--surface);border-radius:6px;border:1px solid var(--border);}
+.calc-result-label{font-size:10px;color:var(--grey);margin-bottom:4px;}
+.calc-result-value{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--green);}
+.calc-result-sub{font-size:10px;color:var(--grey);margin-top:4px;}
+
+/* SIP TRACKER */
+.sip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.sip-header{background:var(--surface);padding:10px 14px;font-size:10px;font-weight:700;color:var(--grey);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.sip-row{display:contents;}
+.sip-cell{padding:11px 14px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text);border-right:1px solid var(--border);}
+.sip-cell:last-child{border-right:none;}
+.sip-name{font-weight:600;color:var(--white);}
+.sip-amount{font-family:'Space Mono',monospace;font-size:11px;color:var(--green);}
+.sip-check{display:flex;align-items:center;justify-content:center;}
+.sip-tick{width:22px;height:22px;border-radius:4px;border:2px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:12px;}
+.sip-tick:hover{border-color:var(--green);}
+.sip-tick.done{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+
+/* NET WORTH */
+.asset-bar{display:flex;height:28px;border-radius:6px;overflow:hidden;margin:16px 20px;border:1px solid var(--border);}
+.asset-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;font-family:'Space Mono',monospace;transition:all 0.3s;}
+.asset-seg:hover{opacity:0.85;}
+.nw-legend{display:flex;flex-wrap:wrap;gap:12px;padding:0 20px 16px;}
+.nw-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text);}
+.nw-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+.nw-big{font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--white);padding:20px 20px 4px;}
+.nw-sub{font-size:12px;color:var(--grey);padding:0 20px 20px;}
+
+/* STOCK ANALYZER */
+.analyzer-wrap{padding:24px;}
+.analyzer-search{display:flex;gap:12px;margin-bottom:24px;}
+.analyzer-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;color:var(--white);font-family:'Space Grotesk',sans-serif;font-size:14px;outline:none;}
+.analyzer-input:focus{border-color:var(--gold);}
+.analyzer-btn{padding:12px 24px;background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold);border-radius:6px;font-weight:700;cursor:pointer;transition:all 0.2s;font-size:13px;}
+.analyzer-btn:hover{background:var(--gold);color:var(--bg);}
+.score-display{display:none;}
+.score-hero{text-align:center;padding:28px;border-bottom:1px solid var(--border);}
+.score-name{font-size:24px;font-weight:700;color:var(--white);margin-bottom:6px;}
+.score-number{font-family:'Space Mono',monospace;font-size:72px;font-weight:700;line-height:1;}
+.score-max{font-size:18px;color:var(--grey);}
+.score-verdict{font-size:16px;font-weight:700;margin-top:8px;}
+.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);}
+.score-param{background:var(--card);padding:14px;text-align:center;}
+.score-param-label{font-size:9px;color:var(--grey);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;}
+.score-param-val{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;}
+.score-bar-wrap{margin:16px 0 4px;}
+.score-bar-track{background:var(--surface);border-radius:3px;height:4px;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:3px;transition:width 0.8s ease;}
+.score-analysis{padding:18px 20px;font-size:12px;color:var(--text);line-height:1.7;}
+.loading-spinner{display:none;text-align:center;padding:40px;color:var(--grey);}
+.spinner{display:inline-block;width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ANALYSIS */
+.bar-row{margin-bottom:14px;}
+.bar-label-row{display:flex;justify-content:space-between;margin-bottom:5px;}
+.bar-name{font-size:12px;color:var(--text);}
+.bar-pct{font-size:11px;font-family:'Space Mono',monospace;color:var(--gold);}
+.bar-track{height:8px;background:var(--surface);border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;transition:width 1s ease;}
+
+/* TRADE LOG */
+.trade-form{display:grid;grid-template-columns:repeat(5,1fr) auto;gap:10px;padding:16px;border-bottom:1px solid var(--border);align-items:end;}
+.trade-field label{font-size:10px;color:var(--grey);display:block;margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;}
+.trade-field input, .trade-field select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px 10px;color:var(--white);font-family:'Space Mono',monospace;font-size:12px;outline:none;}
+.trade-field input:focus, .trade-field select:focus{border-color:var(--gold);}
+.add-trade-btn{padding:9px 16px;background:var(--green-dim);color:var(--green);border:1px solid var(--green);border-radius:5px;font-weight:700;cursor:pointer;font-size:12px;white-space:nowrap;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(3,1fr);}
+  .two-col,.three-col,.four-col{grid-template-columns:1fr;}
+  .wl-grid{grid-template-columns:1fr 1fr;}
+  header{flex-direction:column;gap:10px;}
+  .page{padding:16px;}
+  .plan-step{grid-template-columns:36px 1fr;}
+  .step-outcome{display:none;}
+  .calc-grid{grid-template-columns:1fr;}
+  .score-grid{grid-template-columns:repeat(2,1fr);}
+  .trade-form{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item"><span class="name">CAMS</span><span>₹784</span><span class="down">▼0.36%</span></div>
+    <div class="ticker-item"><span class="name">HDFCBANK</span><span>₹796</span><span class="up">▲0.39%</span></div>
+    <div class="ticker-item"><span class="name">IGIL</span><span>₹350</span><span class="up">▲1.25%</span></div>
+    <div class="ticker-item"><span class="name">KAYNES</span><span>₹3,225</span><span class="up">▲1.92%</span></div>
+    <div class="ticker-item"><span class="name">WAAREE</span><span>₹2,859</span><span class="down">▼5.0%</span></div>
+    <div class="ticker-item"><span class="name">INFY</span><span>₹1,041</span><span class="down">▼1.46%</span></div>
+    <div class="ticker-item"><span class="name">M&M</span><span>₹3,182</span><span class="up">▲3.84%</span></div>
+    <div class="ticker-item"><span class="name">ITCHOTELS</span><span>₹174</span><span class="down">▼2.73%</span></div>
+    <div class="ticker-item"><span class="name">GOLD</span><span>₹14,300/g</span><span class="up">▲0.4%</span></div>
+    <div class="ticker-item"><span class="name">NIFTY 50</span><span>24,850</span><span class="down">▼0.28%</span></div>
+    <div class="ticker-item"><span class="name">CAMS</span><span>₹784</span><span class="down">▼0.36%</span></div>
+    <div class="ticker-item"><span class="name">HDFCBANK</span><span>₹796</span><span class="up">▲0.39%</span></div>
+    <div class="ticker-item"><span class="name">IGIL</span><span>₹350</span><span class="up">▲1.25%</span></div>
+    <div class="ticker-item"><span class="name">KAYNES</span><span>₹3,225</span><span class="up">▲1.92%</span></div>
+    <div class="ticker-item"><span class="name">WAAREE</span><span>₹2,859</span><span class="down">▼5.0%</span></div>
+    <div class="ticker-item"><span class="name">INFY</span><span>₹1,041</span><span class="down">▼1.46%</span></div>
+    <div class="ticker-item"><span class="name">M&M</span><span>₹3,182</span><span class="up">▲3.84%</span></div>
+    <div class="ticker-item"><span class="name">ITCHOTELS</span><span>₹174</span><span class="down">▼2.73%</span></div>
+    <div class="ticker-item"><span class="name">GOLD</span><span>₹9,200/g</span><span class="up">▲0.4%</span></div>
+    <div class="ticker-item"><span class="name">NIFTY 50</span><span>24,850</span><span class="down">▼0.28%</span></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-area">
+    <h1>RAMAN'S INVESTMENT OFFICE</h1>
+    <p>Portfolio Command Center  ·  Est. Jun 2026  ·  Target ₹7,00,00,000</p>
+  </div>
+  <div class="header-meta">
+    Last updated <span>Jun 30, 2026</span><br>
+    Horizon <span>10 Years</span>  ·  Required CAGR <span>18–21.5%</span>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="tab active" onclick="showPage('dashboard',this)">⚡ Dashboard</div>
+  <div class="tab" onclick="showPage('networth',this)">💰 Net Worth</div>
+  <div class="tab" onclick="showPage('holdings',this)">📈 Holdings</div>
+  <div class="tab" onclick="showPage('mf',this)">🏦 Mutual Funds</div>
+  <div class="tab" onclick="showPage('watchlist',this)">🔍 Watchlist</div>
+  <div class="tab" onclick="showPage('actions',this)">⚡ Actions</div>
+  <div class="tab" onclick="showPage('results',this)">📅 Results</div>
+  <div class="tab" onclick="showPage('plan',this)">📐 ₹7Cr Plan</div>
+  <div class="tab" onclick="showPage('analysis',this)">📊 Analysis</div>
+  <div class="tab" onclick="showPage('analyzer',this)">🎯 Stock Analyzer</div>
+  <div class="tab" onclick="showPage('calculators',this)">🧮 Calculators</div>
+  <div class="tab" onclick="showPage('siptracker',this)">📋 SIP Tracker</div>
+  <div class="tab" onclick="showPage('tradelog',this)">📒 Trade Log</div>
+</nav>
+
+<!-- ═══════════════════════════════════
+     DASHBOARD
+═══════════════════════════════════ -->
+<div id="page-dashboard" class="page active">
+  <!-- MORNING BRIEFING -->
+  <div class="section-card" id="briefingCard" style="margin-bottom:20px;border-left:3px solid var(--gold);">
+    <div class="section-head"><h3>☀️ Morning Briefing</h3><span class="badge" style="background:var(--gold-dim);color:var(--gold)" id="briefingDate"></span></div>
+    <div style="padding:18px 20px" id="briefingContent">
+      <div style="font-size:12px;color:var(--grey);">Update today's prices below to generate your morning briefing.</div>
+    </div>
+  </div>
+
+  <!-- PRICE UPDATE BOX -->
+  <div class="section-card" style="margin-bottom:20px;">
+    <div class="section-head"><h3>📝 Update Today's Prices</h3><span class="badge" style="background:var(--blue-dim);color:var(--blue)">Type price → Tap Update</span></div>
+    <div style="padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;" id="priceInputGrid"></div>
+    <div style="padding:0 20px 18px;">
+      <button class="calc-btn" onclick="generateBriefing()">Generate Morning Briefing →</button>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi grey"><div class="kpi-label">Equity Invested</div><div class="kpi-value">₹20.5L</div><div class="kpi-sub">21 stocks</div></div>
+    <div class="kpi blue"><div class="kpi-label">Equity Current</div><div class="kpi-value blue">₹27.9L</div><div class="kpi-sub">+36.15%</div></div>
+    <div class="kpi green"><div class="kpi-label">MF Value</div><div class="kpi-value green">₹7.78L</div><div class="kpi-sub">+80.51%</div></div>
+    <div class="kpi gold"><div class="kpi-label">Total Wealth</div><div class="kpi-value gold">₹67.82L</div><div class="kpi-sub">All assets</div></div>
+    <div class="kpi orange"><div class="kpi-label">Fresh Capital</div><div class="kpi-value orange">₹50L</div><div class="kpi-sub">Ready to deploy</div></div>
+    <div class="kpi gold"><div class="kpi-label">Target Progress</div><div class="kpi-value gold">9.7%</div><div class="kpi-sub">of ₹7,00,00,000</div></div>
+    <div class="kpi red"><div class="kpi-label">Corpus Gap</div><div class="kpi-value red">₹6.32Cr</div><div class="kpi-sub">10 years to close</div></div>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-header">
+      <div class="progress-title">Journey to ₹7 Crore — All Assets Combined</div>
+      <div class="progress-pct">9.8% complete · ₹67.82L of ₹7,00,00,000</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="mainProgress" style="width:9.7%"></div></div>
+    <div class="progress-labels"><span>₹0</span><span style="color:var(--gold)">TODAY ₹68.7L</span><span>₹7,00,00,000</span></div>
+  </div>
+
+  <div class="two-col">
+    <div class="section-card">
+      <div class="section-head"><h3>Today's Watchlist</h3><span class="badge" style="background:var(--blue-dim);color:var(--blue)">Jun 30 2026</span></div>
+      <table class="mini-table">
+        <tr><td>CAMS</td><td class="mono">₹784</td><td class="gold">Zone: ₹750–780</td><td><span class="badge-wait">WATCH</span></td></tr>
+        <tr><td>IGIL ✅</td><td class="mono">₹350</td><td class="green">Bought 49 @ ₹350</td><td><span class="badge-done">DONE</span></td></tr>
+        <tr><td>KAYNES</td><td class="mono">₹3,225</td><td class="grey">Limit ₹3,100 live</td><td><span class="badge-cond">ORDER</span></td></tr>
+        <tr><td>WAAREE</td><td class="mono" style="color:var(--red)">₹2,859</td><td class="grey">Stop ₹2,700</td><td><span class="badge-exit">HOLD</span></td></tr>
+        <tr><td>VINATI</td><td class="mono" style="color:var(--red)">₹1,346</td><td class="grey">Alert ₹1,280</td><td><span class="badge-wait">WATCH</span></td></tr>
+        <tr><td>INFY</td><td class="mono">₹1,041</td><td class="grey">Results Jul 17–19</td><td><span class="badge-cond">WAIT</span></td></tr>
+      </table>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h3>Portfolio Health</h3></div>
+      <div class="health-grid">
+        <div class="health-item"><div><div class="health-label">Concentration</div><div class="health-value">21 → 15 stocks</div></div><span class="health-icon" style="color:var(--orange)">⚠</span></div>
+        <div class="health-item"><div><div class="health-label">Win Rate</div><div class="health-value">67%  14W/7L</div></div><span class="health-icon" style="color:var(--green)">✓</span></div>
+        <div class="health-item"><div><div class="health-label">Equity Deployed</div><div class="health-value">29% of corpus</div></div><span class="health-icon" style="color:var(--orange)">⚠</span></div>
+        <div class="health-item"><div><div class="health-label">Core Picks</div><div class="health-value">4 of target 8</div></div><span class="health-icon" style="color:var(--orange)">⚠</span></div>
+        <div class="health-item"><div><div class="health-label">LTCG Planning</div><div class="health-value">All exits mapped</div></div><span class="health-icon" style="color:var(--green)">✓</span></div>
+        <div class="health-item"><div><div class="health-label">SIP Discipline</div><div class="health-value">₹20K → ₹30K</div></div><span class="health-icon" style="color:var(--green)">✓</span></div>
+        <div class="health-item"><div><div class="health-label">Largest Position</div><div class="health-value">CDSL 12.9%</div></div><span class="health-icon" style="color:var(--green)">✓</span></div>
+        <div class="health-item"><div><div class="health-label">MF Alpha</div><div class="health-value">+80.51%</div></div><span class="health-icon" style="color:var(--green)">✓</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="cio-note">
+    <div class="cio-label">CIO Note · Jun 30 2026</div>
+    <div class="cio-text">Day one complete. IGIL bought at ₹350 — right stock, right price, right discipline. CAMS at ₹784, just ₹4 above trigger — patience held. Total wealth including PPF, NPS, EPFO, SGB now ₹68.7L — a much stronger base than it looks on just equity alone. Three results matter most this month: Infosys Jul 17, CAMS Jul 22, Kaynes Jul 23. These drive ₹1.5L+ of deployment decisions. Everything else is noise.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     NET WORTH
+═══════════════════════════════════ -->
+<div id="page-networth" class="page">
+  <div class="section-card" style="margin-bottom:16px">
+    <div class="nw-big">₹67,82,408</div>
+    <div class="nw-sub">Total Net Worth · All Asset Classes · Jun 30 2026</div>
+    <div class="asset-bar">
+      <div class="asset-seg" style="width:40.5%;background:#1B4F72;" title="Equity ₹27.86L">EQ 40.5%</div>
+      <div class="asset-seg" style="width:11.5%;background:#1A5E35;" title="MF ₹7.78L">MF 11.5%</div>
+      <div class="asset-seg" style="width:16.7%;background:#7B2D00;" title="PPF ₹11.5L">PPF 16.7%</div>
+      <div class="asset-seg" style="width:17.5%;background:#4A3000;" title="EPFO ₹12L">EPFO 17.5%</div>
+      <div class="asset-seg" style="width:4.3%;background:#5E1A1A;" title="NPS ₹2.96L">NPS 4.3%</div>
+      <div class="asset-seg" style="width:8.4%;background:#4A2D00;" title="SGB ₹5.72L">SGB 8.4%</div>
+      <div class="asset-seg" style="width:0.4%;background:#333;" title="Other">·</div>
+    </div>
+    <div class="nw-legend">
+      <div class="nw-leg-item"><div class="nw-dot" style="background:#1B4F72"></div>Equity ₹27.86L</div>
+      <div class="nw-leg-item"><div class="nw-dot" style="background:#1A5E35"></div>Mutual Funds ₹7.78L</div>
+      <div class="nw-leg-item"><div class="nw-dot" style="background:#7B2D00"></div>PPF ₹11.5L</div>
+      <div class="nw-leg-item"><div class="nw-dot" style="background:#4A3000"></div>EPFO ₹12L</div>
+      <div class="nw-leg-item"><div class="nw-dot" style="background:#5E1A1A"></div>NPS ₹2.96L</div>
+      <div class="nw-leg-item"><div class="nw-dot" style="background:#4A2D00"></div>SGB ₹5.72L (40u × ₹14,300/g)</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><h3>Asset Class Breakdown</h3><span class="badge" style="background:var(--gold-dim);color:var(--gold)">Excl. ₹50L fresh capital</span></div>
+    <table class="full-table">
+      <thead><tr><th>ASSET CLASS</th><th class="right">INVESTED</th><th class="right">CURRENT VALUE</th><th class="right">P&L</th><th class="right">RETURN</th><th class="right">MONTHLY ADD</th><th>NOTES</th></tr></thead>
+      <tbody>
+        <tr><td class="stock-name">Equity Portfolio</td><td class="mono">₹20,47,654</td><td class="mono" style="color:var(--blue)">₹27,86,447</td><td class="pos">+₹7,38,793</td><td class="pos">+36.15%</td><td class="mono" style="color:var(--green)">₹25,000</td><td class="note">21 stocks → 15 target. Engine of wealth.</td></tr>
+        <tr><td class="stock-name">Mutual Funds</td><td class="mono">₹4,30,984</td><td class="mono" style="color:var(--blue)">₹7,77,961</td><td class="pos">+₹3,46,977</td><td class="pos">+80.51%</td><td class="mono" style="color:var(--green)">₹19,000/mo</td><td class="note">9 funds → 5 target. Review SIP strategy — Quant + Motilal SIPs to stop.</td></tr>
+        <tr><td class="stock-name">PPF</td><td class="mono">~₹8,00,000</td><td class="mono" style="color:var(--gold)">₹11,50,000</td><td class="pos">+₹3,50,000</td><td class="pos">~+43%</td><td class="mono" style="color:var(--green)">₹5,000</td><td class="note">7.1% tax-free guaranteed. Solid floor.</td></tr>
+        <tr><td class="stock-name">EPFO</td><td class="mono">—</td><td class="mono" style="color:var(--gold)">₹12,00,000</td><td class="grey">—</td><td class="grey">—</td><td class="grey">Auto deducted</td><td class="note">Employer PF. Long-term retirement floor.</td></tr>
+        <tr><td class="stock-name">NPS</td><td class="mono">~₹2,00,000</td><td class="mono" style="color:var(--gold)">₹2,96,000</td><td class="pos">+₹96,000</td><td class="pos">~+48%</td><td class="mono" style="color:var(--green)">₹5,000</td><td class="note">Equity NPS growing well. Tax efficient.</td></tr>
+        <tr><td class="stock-name">SGB (40 units)</td><td class="mono">₹2,04,360</td><td class="mono" style="color:var(--gold)">₹5,72,000</td><td class="pos">+₹3,67,640</td><td class="pos">+179.9%</td><td class="grey">—</td><td class="note">40 units × ₹9,200/g. Sovereign Gold Bond. Tax-free on maturity.</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td>TOTAL NET WORTH</td><td>₹36,82,998</td><td>₹67,82,408 ✦</td><td style="color:var(--green)">+₹30,99,450</td><td style="color:var(--green)">+84.2%</td><td style="color:var(--green)">₹55,000/mo</td><td></td></tr>
+      </tfoot>
+    </table>
+    <div style="padding:12px 18px;font-size:10px;color:var(--grey);font-style:italic;">✦ Excludes ₹50L fresh deployable capital. Including fresh capital total deployable wealth = ₹1,18,72,369</div>
+  </div>
+
+  <div class="two-col">
+    <div class="section-card">
+      <div class="section-head"><h3>Monthly Cash Commitments</h3></div>
+      <table class="mini-table">
+        <tr><td>MF SIPs (3 funds)</td><td class="green">₹20,000 → ₹30,000</td></tr>
+        <tr><td>NPS</td><td class="green">₹5,000</td></tr>
+        <tr><td>PPF</td><td class="green">₹5,000</td></tr>
+        <tr><td>Extra equity</td><td class="green">₹20,000–30,000</td></tr>
+        <tr><td>Fresh ₹50L tranches</td><td class="gold">₹1,00,000–2,00,000</td></tr>
+        <tr><td style="color:var(--gold);font-weight:700">Total (conservative)</td><td class="gold">₹55,000/month</td></tr>
+        <tr><td style="color:var(--gold);font-weight:700">Annual (incl. bonus)</td><td class="gold">₹8,10,000/year</td></tr>
+      </table>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h3>SGB Details</h3></div>
+      <table class="mini-table">
+        <tr><td>Units Held</td><td class="mono">40 units</td></tr>
+        <tr><td>Invested</td><td class="mono">₹2,04,360</td></tr>
+        <tr><td>Avg Cost/unit</td><td class="mono">₹5,109</td></tr>
+        <tr><td>Current Gold Price</td><td class="mono">₹14,300/g</td></tr>
+        <tr><td>Current Value</td><td class="green">₹5,72,000</td></tr>
+        <tr><td>Gain</td><td class="green">+₹3,67,640 (+179.9%)</td></tr>
+        <tr><td>Tax on maturity</td><td class="gold">Zero (if held to maturity)</td></tr>
+        <tr><td>Interest</td><td class="gold">2.5% p.a. on invested amount</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     HOLDINGS
+═══════════════════════════════════ -->
+<div id="page-holdings" class="page">
+  <div class="section-card">
+    <div class="section-head"><h3>Equity Holdings · 21 Stocks</h3><span class="badge" style="background:var(--green-dim);color:var(--green)">Invested ₹20.47L · Current ₹27.86L · +36.15%</span></div>
+    <div class="search-wrap"><input class="search-input" type="text" placeholder="Search stock..." oninput="filterTable(this,'holdings-tbody')"></div>
+    <div class="table-wrap">
+      <table class="full-table">
+        <thead><tr><th>STOCK</th><th class="right">QTY</th><th class="right">AVG ₹</th><th class="right">INVESTED</th><th class="right">LTP ₹</th><th class="right">CURRENT</th><th class="right">P&L ₹</th><th class="right">RETURN</th><th>STATUS</th><th>NOTES</th></tr></thead>
+        <tbody id="holdings-tbody">
+          <tr><td class="stock-name">ABCAPITAL</td><td class="mono">300</td><td class="mono">113.94</td><td class="mono">34,181</td><td class="mono">390.80</td><td class="mono">1,17,240</td><td class="pos">+83,059</td><td class="pos">+243%</td><td><span class="badge-hold">HOLD</span></td><td class="note">Legacy +243%. Not in final-15 but let run</td></tr>
+          <tr><td class="stock-name">AMBUJACEM</td><td class="mono">151</td><td class="mono">568.95</td><td class="mono">85,911</td><td class="mono">423.75</td><td class="mono">63,986</td><td class="neg">-21,926</td><td class="neg">-25.5%</td><td><span class="badge-exit">EXIT</span></td><td class="note">Hold. Review Dec 31. Hard exit below ₹480</td></tr>
+          <tr><td class="stock-name">CAMS ★</td><td class="mono">100</td><td class="mono">801.19</td><td class="mono">80,118</td><td class="mono">798.30</td><td class="mono">79,830</td><td class="neg">-289</td><td class="neg">-0.4%</td><td><span class="badge-core">CORE</span></td><td class="note">Add ₹50K at ₹780. Highest conviction.</td></tr>
+          <tr><td class="stock-name">CDSL</td><td class="mono">273</td><td class="mono">1,405</td><td class="mono">3,83,686</td><td class="mono">1,317</td><td class="mono">3,59,541</td><td class="neg">-24,146</td><td class="neg">-6.3%</td><td><span class="badge-hold">HOLD</span></td><td class="note">Largest position. Q1 Jul trigger. No addition.</td></tr>
+          <tr><td class="stock-name">DLF</td><td class="mono">100</td><td class="mono">750.92</td><td class="mono">75,092</td><td class="mono">621.35</td><td class="mono">62,135</td><td class="neg">-12,957</td><td class="neg">-17.3%</td><td><span class="badge-exit">EXIT</span></td><td class="note">Hold. Review Dec 31. Hard exit below ₹700</td></tr>
+          <tr><td class="stock-name">ELECON</td><td class="mono">96</td><td class="mono">526.37</td><td class="mono">50,531</td><td class="mono">522.20</td><td class="mono">50,131</td><td class="neg">-400</td><td class="neg">-0.8%</td><td><span class="badge-hold">HOLD</span></td><td class="note">New Exec Director Oct 2026</td></tr>
+          <tr><td class="stock-name">FORTIS</td><td class="mono">100</td><td class="mono">275.93</td><td class="mono">27,592</td><td class="mono">954.80</td><td class="mono">95,480</td><td class="pos">+67,887</td><td class="pos">+246%</td><td><span class="badge-hold">HOLD</span></td><td class="note">Legacy +246%. Don't add.</td></tr>
+          <tr><td class="stock-name">GICRE</td><td class="mono">500</td><td class="mono">117.14</td><td class="mono">58,570</td><td class="mono">360.95</td><td class="mono">1,80,475</td><td class="pos">+1,21,905</td><td class="pos">+208%</td><td><span class="badge-hold">HOLD</span></td><td class="note">Legacy +208%</td></tr>
+          <tr><td class="stock-name">HDFCBANK ★</td><td class="mono">280</td><td class="mono">769.90</td><td class="mono">2,15,571</td><td class="mono">796.30</td><td class="mono">2,22,964</td><td class="pos">+7,392</td><td class="pos">+3.4%</td><td><span class="badge-core">CORE</span></td><td class="note">Safe compounder. Keep building on dips.</td></tr>
+          <tr><td class="stock-name">IDFCFIRSTB</td><td class="mono">1,240</td><td class="mono">34.82</td><td class="mono">43,170</td><td class="mono">79.22</td><td class="mono">98,233</td><td class="pos">+55,062</td><td class="pos">+127.6%</td><td><span class="badge-exit">EXIT</span></td><td class="note">Not in final-15. Exit for redeployment.</td></tr>
+          <tr><td class="stock-name">IGIL ★</td><td class="mono">473</td><td class="mono">354.73</td><td class="mono">1,67,785</td><td class="mono">350</td><td class="mono">1,65,550</td><td class="neg">-2,235</td><td class="neg">-1.3%</td><td><span class="badge-core">CORE</span></td><td class="note">49 shares added Jun 30 @ ₹350. 29x PE, 43% ROE.</td></tr>
+          <tr><td class="stock-name">IL&FSTRANS</td><td class="mono">100</td><td class="mono">22.56</td><td class="mono">2,255</td><td class="mono">2.38</td><td class="mono">238</td><td class="neg">-2,018</td><td class="neg">-89.5%</td><td><span class="badge-writeoff">W/OFF</span></td><td class="note">Broker exit restricted. Mental write-off.</td></tr>
+          <tr><td class="stock-name">INFY</td><td class="mono">50</td><td class="mono">1,051.72</td><td class="mono">52,585</td><td class="mono">1,041</td><td class="mono">52,060</td><td class="neg">-526</td><td class="neg">-1.0%</td><td><span class="badge-watch">WATCH</span></td><td class="note">Results Jul 17–19. Buy at ₹950–1,000 if positive.</td></tr>
+          <tr><td class="stock-name">ITCHOTELS ★</td><td class="mono">603</td><td class="mono">155.06</td><td class="mono">93,503</td><td class="mono">173.68</td><td class="mono">1,04,729</td><td class="pos">+11,225</td><td class="pos">+12.0%</td><td><span class="badge-core">CORE</span></td><td class="note">Marriott Bonvoy. Aspirational luxury play.</td></tr>
+          <tr><td class="stock-name">KAYNES</td><td class="mono">52</td><td class="mono">3,399.79</td><td class="mono">1,76,788</td><td class="mono">3,265</td><td class="mono">1,69,764</td><td class="neg">-7,024</td><td class="neg">-4.0%</td><td><span class="badge-hold">HOLD</span></td><td class="note">Limit buy ₹3,100 live. OSAT thesis. Q1 critical.</td></tr>
+          <tr><td class="stock-name">LTF</td><td class="mono">375</td><td class="mono">107.83</td><td class="mono">40,436</td><td class="mono">299</td><td class="mono">1,12,125</td><td class="pos">+71,688</td><td class="pos">+177.3%</td><td><span class="badge-hold">HOLD</span></td><td class="note">Not in final-15. Review exit timing.</td></tr>
+          <tr><td class="stock-name">M&M</td><td class="mono">107</td><td class="mono">971.36</td><td class="mono">1,03,935</td><td class="mono">3,182</td><td class="mono">3,40,495</td><td class="pos">+2,36,560</td><td class="pos">+227.6%</td><td><span class="badge-hold">HOLD</span></td><td class="note">Legacy +228%. Strong performer.</td></tr>
+          <tr><td class="stock-name">PAISALO</td><td class="mono">2,963</td><td class="mono">34.76</td><td class="mono">1,02,994</td><td class="mono">59.34</td><td class="mono">1,75,824</td><td class="pos">+72,829</td><td class="pos">+70.7%</td><td><span class="badge-exit">EXIT</span></td><td class="note">Exit Oct 2026 when LTCG window opens.</td></tr>
+          <tr><td class="stock-name">PNB</td><td class="mono">1,655</td><td class="mono">68.99</td><td class="mono">1,14,176</td><td class="mono">107.87</td><td class="mono">1,78,525</td><td class="pos">+64,348</td><td class="pos">+56.4%</td><td><span class="badge-exit">EXIT</span></td><td class="note">Exit Apr 2027 when LTCG limit resets.</td></tr>
+          <tr><td class="stock-name">WAAREE</td><td class="mono">33</td><td class="mono">3,008.38</td><td class="mono">99,276</td><td class="mono">2,859</td><td class="mono">94,347</td><td class="neg">-4,929</td><td class="neg">-5.0%</td><td><span class="badge-exit">EXIT</span></td><td class="note">CBP ruling. Exit on bounce to ₹3,100. Stop ₹2,700.</td></tr>
+          <tr><td class="stock-name">ZENTEC</td><td class="mono">40</td><td class="mono">1,387.27</td><td class="mono">55,490</td><td class="mono">1,771</td><td class="mono">70,848</td><td class="pos">+15,357</td><td class="pos">+27.7%</td><td><span class="badge-hold">HOLD</span></td><td class="note">Order book ₹1,427Cr. Watching.</td></tr>
+        </tbody>
+        <tfoot><tr><td>TOTAL</td><td></td><td></td><td>₹20,47,654</td><td></td><td>₹27,85,469</td><td style="color:var(--green)">+₹7,37,815</td><td style="color:var(--green)">+36.0%</td><td></td><td></td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     MUTUAL FUNDS
+═══════════════════════════════════ -->
+<div id="page-mf" class="page">
+  <div class="section-card">
+    <div class="section-head"><h3>Mutual Fund Portfolio · 9 Funds</h3><span class="badge" style="background:var(--gold-dim);color:var(--gold)">Invested ₹4.31L · Current ₹7.78L · +80.51%</span></div>
+    <div class="table-wrap">
+      <table class="full-table">
+        <thead><tr><th>FUND</th><th>TYPE</th><th class="right">SIP/MO</th><th class="right">INVESTED</th><th class="right">CURRENT</th><th class="right">P&L</th><th class="right">RETURN</th><th>ACTION</th></tr></thead>
+        <tbody>
+          <tr><td class="stock-name">SBI Large Cap Fund</td><td class="note">Active Large</td><td class="mono">—</td><td class="mono">90,000</td><td class="mono">2,07,000</td><td class="pos">+1,17,000</td><td class="pos">+129.67%</td><td><span class="badge-hold">HOLD</span></td></tr>
+          <tr><td class="stock-name">SBI Banking & Financial Svcs</td><td class="note">Sectoral</td><td class="mono">—</td><td class="mono">76,000</td><td class="mono">1,85,000</td><td class="pos">+1,09,000</td><td class="pos">+143.23%</td><td><span class="badge-hold">HOLD</span></td></tr>
+          <tr><td class="stock-name">Mirae Asset ELSS Tax Saver</td><td class="note">ELSS</td><td class="mono">—</td><td class="mono">68,000</td><td class="mono">1,67,000</td><td class="pos">+99,200</td><td class="pos">+145.88%</td><td><span class="badge-hold">HOLD</span></td></tr>
+          <tr><td class="stock-name">SBI Infrastructure Fund</td><td class="note">Sectoral</td><td class="mono" style="color:var(--orange)">₹2,000</td><td class="mono">78,000</td><td class="mono">96,850</td><td class="pos">+18,850</td><td class="pos">+24.17%</td><td><span class="badge-hold">HOLD</span></td></tr>
+          <tr><td class="stock-name">Parag Parikh Flexi Cap ★</td><td class="note">Active Flexi</td><td class="mono" style="color:var(--green)">₹5,000</td><td class="mono">50,000</td><td class="mono">49,800</td><td class="neg">-202</td><td class="neg">-0.40%</td><td><span class="badge-done">CONTINUE</span></td></tr>
+          <tr><td class="stock-name">ICICI Nifty Smallcap 250 ★</td><td class="note">Index</td><td class="mono" style="color:var(--green)">₹2,000</td><td class="mono">25,000</td><td class="mono">25,860</td><td class="pos">+862</td><td class="pos">+3.45%</td><td><span class="badge-done">CONTINUE</span></td></tr>
+          <tr><td class="stock-name">ICICI Nifty Midcap 150 ★</td><td class="note">Index</td><td class="mono" style="color:var(--green)">₹5,000</td><td class="mono">20,000</td><td class="mono">20,970</td><td class="pos">+975</td><td class="pos">+4.87%</td><td><span class="badge-done">CONTINUE</span></td></tr>
+          <tr><td class="stock-name">Motilal Large & Midcap</td><td class="note">Active</td><td class="mono">—</td><td class="mono">15,000</td><td class="mono">15,990</td><td class="pos">+992</td><td class="pos">+6.62%</td><td><span class="badge-exit">STOP SIP</span></td></tr>
+          <tr><td class="stock-name">Quant Small Cap Fund</td><td class="note">Active SC</td><td class="mono" style="color:var(--orange)">₹2,000</td><td class="mono">9,000</td><td class="mono">9,750</td><td class="pos">+751</td><td class="pos">+8.35%</td><td><span class="badge-exit">STOP SIP</span></td></tr>
+        </tbody>
+        <tfoot><tr><td>TOTAL</td><td></td><td style="color:var(--green)">₹19K/mo</td><td>₹4,30,984</td><td>₹7,77,961</td><td style="color:var(--green)">+₹3,46,977</td><td style="color:var(--green)">+80.51%</td><td></td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     WATCHLIST
+═══════════════════════════════════ -->
+<div id="page-watchlist" class="page">
+  <div class="section-card">
+    <div class="section-head"><h3>Stocks to Enter · Price-Conditional Entries</h3></div>
+    <div class="wl-grid">
+      <div class="wl-card"><div class="wl-name">Bharti Airtel</div><div class="wl-sector">Telecom · <span class="badge-high">HIGH</span></div><div class="wl-row"><span class="wl-key">Entry Zone</span><span class="wl-val gold">₹1,450–1,500</span></div><div class="wl-row"><span class="wl-key">CMP</span><span class="wl-val">~₹1,680</span></div><div class="wl-row"><span class="wl-key">Capital</span><span class="wl-val green">₹4,00,000</span></div><div class="wl-thesis">ARPU growth, 5G leader, pricing power. Don't chase above ₹1,550.</div></div>
+      <div class="wl-card"><div class="wl-name">Neuland Labs</div><div class="wl-sector">Pharma/CDMO · <span class="badge-high">HIGH</span></div><div class="wl-row"><span class="wl-key">Entry Zone</span><span class="wl-val gold">₹15,500–16,500</span></div><div class="wl-row"><span class="wl-key">CMP</span><span class="wl-val">~₹16,200</span></div><div class="wl-row"><span class="wl-key">Capital</span><span class="wl-val green">₹2,00,000</span></div><div class="wl-thesis">GLP-1/peptide CDMO. Global complex API leader. 10-year secular tailwind.</div></div>
+      <div class="wl-card"><div class="wl-name">CAMS Top-up</div><div class="wl-sector">Capital Markets · <span class="badge-high">HIGH</span></div><div class="wl-row"><span class="wl-key">Entry Zone</span><span class="wl-val gold">₹750–780</span></div><div class="wl-row"><span class="wl-key">CMP</span><span class="wl-val" style="color:var(--orange)">₹784 ← very close</span></div><div class="wl-row"><span class="wl-key">Capital</span><span class="wl-val green">₹50,000</span></div><div class="wl-thesis">Highest conviction. 68% MF RTA market share. Add every meaningful dip.</div></div>
+      <div class="wl-card"><div class="wl-name">Solar Industries</div><div class="wl-sector">Defence/Chem · <span class="badge-med">MEDIUM</span></div><div class="wl-row"><span class="wl-key">Entry Zone</span><span class="wl-val gold">₹15,000–16,000</span></div><div class="wl-row"><span class="wl-key">CMP</span><span class="wl-val">~₹15,500</span></div><div class="wl-row"><span class="wl-key">Capital</span><span class="wl-val green">₹1,50,000</span></div><div class="wl-thesis">Defence explosives + export moat. Oct — funded by Paisalo exit proceeds.</div></div>
+      <div class="wl-card"><div class="wl-name">Astra Microwave</div><div class="wl-sector">Defence/Space · <span class="badge-med">MEDIUM</span></div><div class="wl-row"><span class="wl-key">Entry Zone</span><span class="wl-val gold">₹1,300–1,400</span></div><div class="wl-row"><span class="wl-key">CMP</span><span class="wl-val">~₹1,350</span></div><div class="wl-row"><span class="wl-key">Capital</span><span class="wl-val green">₹1,50,000</span></div><div class="wl-thesis">Defence electronics moat. Space demerger could unlock significant value.</div></div>
+      <div class="wl-card"><div class="wl-name">Vinati Organics</div><div class="wl-sector">Specialty Chem · <span class="badge-med">MEDIUM</span></div><div class="wl-row"><span class="wl-key">Entry Zone</span><span class="wl-val gold">₹1,200–1,300 ↓ revised</span></div><div class="wl-row"><span class="wl-key">CMP</span><span class="wl-val" style="color:var(--orange)">₹1,346 — close</span></div><div class="wl-row"><span class="wl-key">Capital</span><span class="wl-val green">₹75,000</span></div><div class="wl-thesis">Global IBB/ATBS leader. 35% corrected from highs. Alert set at ₹1,280.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     ACTIONS
+═══════════════════════════════════ -->
+<div id="page-actions" class="page">
+  <div class="two-col">
+    <div class="section-card">
+      <div class="section-head"><h3>This Week · Jun 30 – Jul 6</h3><span class="badge" style="background:var(--red-dim);color:var(--red)">3 Actions</span></div>
+      <div class="action-list">
+        <div class="action-item"><div class="action-check checked" onclick="toggleCheck(this)"></div><div class="action-content"><div class="action-title">Buy IGIL · 49 shares @ ₹350 ✅</div><div class="action-desc">Core position top-up. ₹17,150 deployed. New avg ₹354.73.</div><div class="action-meta"><span class="action-when">Jun 30 DONE</span><span class="action-amt">₹17,150</span></div></div></div>
+        <div class="action-item"><div class="action-check" onclick="toggleCheck(this)"></div><div class="action-content"><div class="action-title">Set up Trendlyne alerts</div><div class="action-desc">trendlyne.com → add all 21 stocks → WhatsApp result alerts.</div><div class="action-meta"><span class="action-when">Jul 1 — Monday</span></div></div></div>
+        <div class="action-item"><div class="action-check" onclick="toggleCheck(this)"></div><div class="action-content"><div class="action-title">Verify Kaynes limit buy @ ₹3,100 GTC</div><div class="action-desc">Confirm 6 shares. Change to GTC if showing as Day order.</div><div class="action-meta"><span class="action-when">Jul 1 — Monday</span><span class="action-amt">₹20,000</span></div></div></div>
+        <div class="action-item"><div class="action-check" onclick="toggleCheck(this)"></div><div class="action-content"><div class="action-title">CAMS price alert at ₹782</div><div class="action-desc">CMP ₹784. ₹4 away. Alert set → triggers → buy ₹50K immediately.</div><div class="action-meta"><span class="action-when">All week</span><span class="action-amt">₹50,000 ready</span></div></div></div>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h3>July Key Dates</h3><span class="badge" style="background:var(--red-dim);color:var(--red)">Results Month</span></div>
+      <div class="action-list">
+        <div class="action-item"><div class="action-check" onclick="toggleCheck(this)"></div><div class="action-content"><div class="action-title">Deploy ₹25K → IGIL</div><div class="action-desc">Monthly surplus. Route to IGIL at CMP ~₹350–360.</div><div class="action-meta"><span class="action-when">Jul 7–10</span><span class="action-amt">₹25,000</span></div></div></div>
+        <div class="action-item"><div class="action-check" onclick="toggleCheck(this)"></div><div class="action-content"><div class="action-title">Infosys Q1 FY27 Results</div><div class="action-desc">CC guidance ≥4% + TCV >$4B → Buy ₹50K at ₹950–1,000. Miss → skip.</div><div class="action-meta"><span class="action-when">Jul 17–19 🔴</span><span class="action-amt">₹50,000 conditional</span></div></div></div>
+        <div class="action-item"><div class="action-check" onclick="toggleCheck(this)"></div><div class="action-content"><div class="action-title">CAMS Q1 FY27 Results</div><div class="action-desc">Margin >46% + AUM growth >25% → add ₹50K on dip to ₹780.</div><div class="action-meta"><span class="action-when">Jul 22–25 🔴</span><span class="action-amt">₹50,000 conditional</span></div></div></div>
+        <div class="action-item"><div class="action-check" onclick="toggleCheck(this)"></div><div class="action-content"><div class="action-title">Kaynes Q1 FY27 — Decision Day</div><div class="action-desc">Rev >₹420Cr + WC <90d + OSAT → buy. Else → exit all 52 shares.</div><div class="action-meta"><span class="action-when">Jul 23–26 🔴</span><span class="action-amt">Hold or Exit ₹1.69L</span></div></div></div>
+        <div class="action-item"><div class="action-check" onclick="toggleCheck(this)"></div><div class="action-content"><div class="action-title">Monthly Review — Last Sunday</div><div class="action-desc">Update all data. Check every trigger. Plan August. 30 min ritual.</div><div class="action-meta"><span class="action-when">Jul 27 Sunday</span></div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="cio-note">
+    <div class="cio-label">CIO Rules · Non-Negotiable</div>
+    <div class="cio-text"><strong style="color:var(--gold)">Rule 1:</strong> Never chase. If stock crosses upper entry zone — skip. &nbsp;<strong style="color:var(--gold)">Rule 2:</strong> One stock at a time. &nbsp;<strong style="color:var(--gold)">Rule 3:</strong> ₹15L dry powder is locked. Black swans only. &nbsp;<strong style="color:var(--gold)">Rule 4:</strong> Corrections = opportunity — redirect to CORE on 8-10% Nifty dip. &nbsp;<strong style="color:var(--gold)">Rule 5:</strong> ₹1.5L bonus = 100% into highest conviction stock. Zero lifestyle inflation.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     RESULTS CALENDAR
+═══════════════════════════════════ -->
+<div id="page-results" class="page">
+  <div class="two-col">
+    <div class="section-card">
+      <div class="section-head"><h3>Q1 FY27 · July 2026</h3><span class="badge" style="background:var(--red-dim);color:var(--red)">Critical</span></div>
+      <div class="cal-item"><div class="cal-date">Jul 17–19</div><div><div class="cal-co">Infosys <span class="badge-high">CRITICAL</span></div><div class="cal-note">CC guidance ≥4% + TCV >$4B → Buy ₹50K at ₹950–1,000</div></div></div>
+      <div class="cal-item"><div class="cal-date">Jul 18–22</div><div><div class="cal-co">HDFC Bank <span class="badge-high">CRITICAL</span></div><div class="cal-note">NIM ≥3.4% + Loan growth >12% → Add ₹50K on dip</div></div></div>
+      <div class="cal-item"><div class="cal-date">Jul 21–25</div><div><div class="cal-co">CDSL <span class="badge-high">CRITICAL</span></div><div class="cal-note">Demat adds >30L/month + revenue >20% YoY</div></div></div>
+      <div class="cal-item"><div class="cal-date">Jul 22–25</div><div><div class="cal-co">CAMS <span class="badge-high">CRITICAL</span></div><div class="cal-note">Margin >46% + AUM >25% → Buy ₹50K at ₹780</div></div></div>
+      <div class="cal-item"><div class="cal-date">Jul 23–26</div><div><div class="cal-co">Kaynes Technology <span class="badge-high">CRITICAL</span></div><div class="cal-note">Rev >₹420Cr + WC <90d + OSAT → Add. Else EXIT all.</div></div></div>
+      <div class="cal-item"><div class="cal-date">Jul 24–28</div><div><div class="cal-co">M&M <span class="badge-med">MEDIUM</span></div><div class="cal-note">SUV volumes + EV order book. Hold regardless.</div></div></div>
+      <div class="cal-item"><div class="cal-date">Jul 25–29</div><div><div class="cal-co">ITC Hotels <span class="badge-med">MEDIUM</span></div><div class="cal-note">RevPAR >₹6,500 + Occupancy >72%</div></div></div>
+      <div class="cal-item"><div class="cal-date">Jul 28–Aug 2</div><div><div class="cal-co">IGIL <span class="badge-med">MEDIUM</span></div><div class="cal-note">ROE >40% + Credit cost <1.5% → Add ₹50K</div></div></div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h3>Q1 FY27 · August 2026</h3></div>
+      <div class="cal-item"><div class="cal-date">Aug 1–6</div><div><div class="cal-co">PNB <span class="badge-low">WATCH</span></div><div class="cal-note">⚠ Irrelevant. Exit Apr 2027. Don't delay exit for results.</div></div></div>
+      <div class="cal-item"><div class="cal-date">Aug 1–6</div><div><div class="cal-co">Paisalo Digital <span class="badge-low">WATCH</span></div><div class="cal-note">⚠ Hold till Oct 2026 LTCG. Results don't change plan.</div></div></div>
+      <div class="cal-item"><div class="cal-date">Aug 3–8</div><div><div class="cal-co">LTF <span class="badge-med">MEDIUM</span></div><div class="cal-note">Retailisation >85% + ROA >2%. Use rally to time exit.</div></div></div>
+      <div class="cal-item"><div class="cal-date">Aug 5–10</div><div><div class="cal-co">GICRE <span class="badge-med">MEDIUM</span></div><div class="cal-note">Combined ratio <100%. Hold. Legacy +208%.</div></div></div>
+      <div class="cal-item"><div class="cal-date">Aug 8–12</div><div><div class="cal-co">Waaree Energies <span class="badge-low">WATCH</span></div><div class="cal-note">⚠ Exit on any 5% bounce. Stop loss ₹2,700.</div></div></div>
+      <div class="cal-item"><div class="cal-date">Aug 10–15</div><div><div class="cal-co">Zen Technologies <span class="badge-med">MEDIUM</span></div><div class="cal-note">Order book >₹1,500Cr + Revenue >₹120Cr</div></div></div>
+      <div class="cal-item"><div class="cal-date">Aug 12–18</div><div><div class="cal-co">AB Capital <span class="badge-med">MEDIUM</span></div><div class="cal-note">AUM >₹4L Cr + ROE >15%. Not in final-15.</div></div></div>
+      <div class="cal-item"><div class="cal-date">TBA Aug</div><div><div class="cal-co">IDFC First Bank <span class="badge-med">MEDIUM</span></div><div class="cal-note">Use post-result rally to EXIT. Not in final-15.</div></div></div>
+    </div>
+  </div>
+  <div class="cio-note">
+    <div class="cio-label">Review Protocol</div>
+    <div class="cio-text">When a result drops — share 4 numbers: Revenue, PAT, EBITDA margin, Guidance. We match against the framework and decide same evening. Action executed next morning at market open. No starting from scratch. No emotion.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     ₹7CR PLAN
+═══════════════════════════════════ -->
+<div id="page-plan" class="page">
+  <div class="three-col">
+    <div class="kpi gold"><div class="kpi-label">All Assets Today</div><div class="kpi-value gold">₹68.7L</div><div class="kpi-sub">Invested wealth</div></div>
+    <div class="kpi blue"><div class="kpi-label">Fresh Capital</div><div class="kpi-value">₹50L</div><div class="kpi-sub">Deploying Jul–Dec 2026</div></div>
+    <div class="kpi green"><div class="kpi-label">Annual Additions</div><div class="kpi-value green">₹9.6L/yr</div><div class="kpi-sub">SIPs + Salary/bonus</div></div>
+  </div>
+  <div class="section-card" style="margin-bottom:16px">
+    <div class="section-head"><h3>10-Year Wealth Projection · Four Scenarios</h3></div>
+    <div style="padding:16px">
+      <div class="proj-grid">
+        <div class="proj-cell head">YEAR</div><div class="proj-cell head" style="color:var(--grey)">14% BASE</div><div class="proj-cell head" style="color:var(--blue)">18% MODERATE</div><div class="proj-cell head" style="color:var(--gold)">21.5% TARGET</div><div class="proj-cell head" style="color:var(--green)">25% STRETCH</div>
+        <div class="proj-cell year">2027</div><div class="proj-cell base">₹145L</div><div class="proj-cell mod">₹155L</div><div class="proj-cell tgt">₹164L</div><div class="proj-cell str">₹174L</div>
+        <div class="proj-cell year">2028</div><div class="proj-cell base">₹175L</div><div class="proj-cell mod">₹193L</div><div class="proj-cell tgt">₹209L</div><div class="proj-cell str">₹227L</div>
+        <div class="proj-cell year">2029</div><div class="proj-cell base">₹209L</div><div class="proj-cell mod">₹237L</div><div class="proj-cell tgt">₹263L</div><div class="proj-cell str">₹294L</div>
+        <div class="proj-cell year">2030</div><div class="proj-cell base">₹247L</div><div class="proj-cell mod">₹289L</div><div class="proj-cell tgt">₹329L</div><div class="proj-cell str">₹377L</div>
+        <div class="proj-cell year">2031</div><div class="proj-cell base">₹291L</div><div class="proj-cell mod">₹350L</div><div class="proj-cell tgt">₹409L</div><div class="proj-cell str">₹481L</div>
+        <div class="proj-cell year">2032</div><div class="proj-cell base">₹341L</div><div class="proj-cell mod">₹422L</div><div class="proj-cell tgt">₹506L</div><div class="proj-cell str">₹611L</div>
+        <div class="proj-cell year">2033</div><div class="proj-cell base">₹397L</div><div class="proj-cell mod">₹507L</div><div class="proj-cell tgt">₹623L</div><div class="proj-cell str">₹773L</div>
+        <div class="proj-cell year">2034</div><div class="proj-cell base">₹461L</div><div class="proj-cell mod">₹607L</div><div class="proj-cell tgt">₹766L</div><div class="proj-cell str">₹976L</div>
+        <div class="proj-cell year">2035</div><div class="proj-cell base">₹533L</div><div class="proj-cell mod hit">₹723L ✓</div><div class="proj-cell tgt hit">₹940L ✓</div><div class="proj-cell str hit">₹1,231L ✓</div>
+        <div class="proj-cell year">2036</div><div class="proj-cell base">₹616L</div><div class="proj-cell mod hit">₹862L ✓</div><div class="proj-cell tgt hit">₹1,151L ✓</div><div class="proj-cell str hit">₹1,548L ✓</div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:16px;font-size:11px;font-family:'Space Mono',monospace;flex-wrap:wrap;">
+        <span style="color:var(--grey)">■ 14% = ₹6.16Cr</span>
+        <span style="color:var(--blue)">■ 18% = ₹8.62Cr ✅ Hits target</span>
+        <span style="color:var(--gold)">■ 21.5% = ₹11.5Cr</span>
+        <span style="color:var(--green)">■ 25% = ₹15.5Cr</span>
+      </div>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="section-head"><h3>The 10-Step Plan</h3></div>
+    <div class="plan-steps">
+      <div class="plan-step"><div class="step-num">1</div><div><div class="step-title">Exit deadwood</div><div class="step-when">Q3 2026</div></div><div class="step-desc">PNB Apr 2027 · Paisalo Oct 2026 · IDFCFIRSTB when opportune. Free ₹4.86L.</div><div class="step-outcome">Capital recycled</div></div>
+      <div class="plan-step"><div class="step-num">2</div><div><div class="step-title">Enter Airtel</div><div class="step-when">Q3 2026</div></div><div class="step-desc">₹4L at ₹1,450–1,500. Patience only. Don't chase above ₹1,550.</div><div class="step-outcome">6th core position</div></div>
+      <div class="plan-step"><div class="step-num">3</div><div><div class="step-title">Enter Neuland Labs</div><div class="step-when">Aug–Sep 2026</div></div><div class="step-desc">₹2L in 2 tranches. GLP-1/peptide CDMO thesis. 10-year runway.</div><div class="step-outcome">7th core position</div></div>
+      <div class="plan-step"><div class="step-num">4</div><div><div class="step-title">Build CAMS + Kaynes</div><div class="step-when">Jul 2026</div></div><div class="step-desc">₹50K CAMS at ₹780. ₹20K Kaynes at ₹3,100. Post Q1 confirmation.</div><div class="step-outcome">Deepen core</div></div>
+      <div class="plan-step"><div class="step-num">5</div><div><div class="step-title">Enter Solar + Astra</div><div class="step-when">Q4 2026</div></div><div class="step-desc">₹1.5L each. Defence basket complete. Funded by Paisalo exit proceeds.</div><div class="step-outcome">Defence basket</div></div>
+      <div class="plan-step"><div class="step-num">6</div><div><div class="step-title">SIP raise to ₹30K</div><div class="step-when">Dec 2026</div></div><div class="step-desc">PP Flexi + ICICI Mid + ICICI Small. ₹3.6L/year compounding quietly.</div><div class="step-outcome">₹3.6L annual engine</div></div>
+      <div class="plan-step"><div class="step-num">7</div><div><div class="step-title">Annual bonus discipline</div><div class="step-when">Mar 31 every year</div></div><div class="step-desc">₹1.5L post-tax → 100% into highest conviction stock. Zero lifestyle inflation.</div><div class="step-outcome">₹15L over 10 years</div></div>
+      <div class="plan-step"><div class="step-num">8</div><div><div class="step-title">Lock final 15 portfolio</div><div class="step-when">Dec 2026</div></div><div class="step-desc">No new names without exiting one existing position.</div><div class="step-outcome">Concentrated + clean</div></div>
+      <div class="plan-step"><div class="step-num">9</div><div><div class="step-title">Monthly review ritual</div><div class="step-when">Last Sunday every month</div></div><div class="step-desc">Update data. Check triggers. Plan next month. 30 minutes. No exceptions.</div><div class="step-outcome">Discipline over luck</div></div>
+      <div class="plan-step"><div class="step-num">10</div><div><div class="step-title">Hold and compound</div><div class="step-when">Year 3–10</div></div><div class="step-desc">Do nothing. Let core positions compound. Resist every urge to tinker.</div><div class="step-outcome">₹68.7L → ₹7–11Cr</div></div>
+    </div>
+  </div>
+  <div class="cio-note">
+    <div class="cio-label">The Honest Truth</div>
+    <div class="cio-text">With ₹68.7L total wealth today + ₹50L fresh capital + ₹9.6L/year additions — even 18% CAGR gets you to ₹8.6Cr. You don't need 21.5%. The extra ₹3–4Cr comes from 2–3 concentrated bets compounding 5x+. PPF + NPS + EPFO + SGB build the floor. The number is real. The math works. Now it's execution.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     ANALYSIS
+═══════════════════════════════════ -->
+<div id="page-analysis" class="page">
+  <div class="two-col">
+    <div class="section-card">
+      <div class="section-head"><h3>Sector Allocation · Equity</h3><span class="badge" style="background:var(--gold-dim);color:var(--gold)">Current</span></div>
+      <div style="padding:18px">
+        <div class="bar-row"><div class="bar-label-row"><span class="bar-name">Financials / Capital Markets</span><span class="bar-pct">38%</span></div><div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--gold)"></div></div></div>
+        <div class="bar-row"><div class="bar-label-row"><span class="bar-name">Auto / Legacy</span><span class="bar-pct">16%</span></div><div class="bar-track"><div class="bar-fill" style="width:16%;background:var(--blue)"></div></div></div>
+        <div class="bar-row"><div class="bar-label-row"><span class="bar-name">Capital Goods / EMS</span><span class="bar-pct">12%</span></div><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--green)"></div></div></div>
+        <div class="bar-row"><div class="bar-label-row"><span class="bar-name">PSU / NBFC exit candidates</span><span class="bar-pct">18%</span></div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--red)"></div></div></div>
+        <div class="bar-row"><div class="bar-label-row"><span class="bar-name">Hospitality / Real Estate</span><span class="bar-pct">6%</span></div><div class="bar-track"><div class="bar-fill" style="width:6%;background:var(--orange)"></div></div></div>
+        <div class="bar-row"><div class="bar-label-row"><span class="bar-name">IT / Pharma / Defence</span><span class="bar-pct">10%</span></div><div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--grey)"></div></div></div>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h3>Concentration Risk</h3></div>
+      <div class="health-grid" style="grid-template-columns:1fr;">
+        <div class="health-item"><div><div class="health-label">Top 5 Holdings</div><div class="health-value">52% of Equity</div></div><span class="health-icon" style="color:var(--orange)">⚠</span></div>
+        <div class="health-item"><div><div class="health-label">Largest — CDSL</div><div class="health-value">12.9%</div></div><span class="health-icon" style="color:var(--green)">✓</span></div>
+        <div class="health-item"><div><div class="health-label">Core 4 picks</div><div class="health-value">32% of equity</div></div><span class="health-icon" style="color:var(--gold)">→ target 50%+</span></div>
+        <div class="health-item"><div><div class="health-label">Exit candidates</div><div class="health-value">7 stocks · 25% weight</div></div><span class="health-icon" style="color:var(--red)">Priority</span></div>
+        <div class="health-item"><div><div class="health-label">Underperformers</div><div class="health-value">AMBUJACEM, DLF, WAAREE</div></div><span class="health-icon" style="color:var(--orange)">⚠</span></div>
+        <div class="health-item"><div><div class="health-label">Missing exposure</div><div class="health-value">Pharma, Defence (0%)</div></div><span class="health-icon" style="color:var(--red)">Gap</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="section-head"><h3>Top Performers vs Laggards</h3></div>
+    <div class="two-col" style="margin:0">
+      <table class="mini-table">
+        <tr><td style="color:var(--green);font-weight:700">🏆 M&M</td><td class="green">+₹2.37L (+228%)</td><td class="grey">Legacy star</td></tr>
+        <tr><td style="color:var(--green);font-weight:700">🏆 FORTIS</td><td class="green">+₹0.68L (+246%)</td><td class="grey">Healthcare compounder</td></tr>
+        <tr><td style="color:var(--green);font-weight:700">🏆 GICRE</td><td class="green">+₹1.22L (+208%)</td><td class="grey">Legacy PSU gem</td></tr>
+        <tr><td style="color:var(--green);font-weight:700">🏆 LTF</td><td class="green">+₹0.72L (+177%)</td><td class="grey">L&T Finance</td></tr>
+        <tr><td style="color:var(--green);font-weight:700">🏆 PAISALO</td><td class="green">+₹0.73L (+71%)</td><td class="grey">Exit Oct 2026</td></tr>
+      </table>
+      <table class="mini-table">
+        <tr><td style="color:var(--red);font-weight:700">⚠ IL&FSTRANS</td><td class="red">-₹0.02L (-89%)</td><td class="grey">Write-off</td></tr>
+        <tr><td style="color:var(--red);font-weight:700">⚠ AMBUJACEM</td><td class="red">-₹0.22L (-26%)</td><td class="grey">Review Dec 31</td></tr>
+        <tr><td style="color:var(--red);font-weight:700">⚠ DLF</td><td class="red">-₹0.13L (-17%)</td><td class="grey">Review Dec 31</td></tr>
+        <tr><td style="color:var(--red);font-weight:700">⚠ WAAREE</td><td class="red">-₹0.05L (-5%)</td><td class="grey">Exit on bounce</td></tr>
+        <tr><td style="color:var(--red);font-weight:700">⚠ KAYNES</td><td class="red">-₹0.07L (-4%)</td><td class="grey">Q1 FY27 decision</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cio-note">
+    <div class="cio-label">Analysis Note</div>
+    <div class="cio-text">Portfolio has 0% in Pharma and Defence — two of the strongest structural themes for the next decade. Neuland, Solar Industries, Astra Microwave will fix this by Q4 2026. Exit of 5–6 legacy/underperformers will reduce tail-drag significantly. Target: 8 core positions driving 70%+ of portfolio weight by Dec 2026.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     STOCK ANALYZER (AI-POWERED)
+═══════════════════════════════════ -->
+<div id="page-analyzer" class="page">
+  <div class="section-card">
+    <div class="section-head">
+      <h3>AI Stock Analyzer · 10-Parameter Scoring</h3>
+      <span class="badge" style="background:var(--blue-dim);color:var(--blue)">Powered by Claude AI</span>
+    </div>
+    <div class="analyzer-wrap">
+      <div style="font-size:12px;color:var(--grey);margin-bottom:16px;">Enter any Indian stock name or ticker. Claude will score it across our 10 investment parameters and give a Buy / Watch / Avoid verdict based on your ₹7Cr portfolio strategy.</div>
+      <div class="analyzer-search">
+        <input class="analyzer-input" id="stockInput" type="text" placeholder="e.g. Tata Motors, RELIANCE, Dixon Technologies..." onkeydown="if(event.key==='Enter')analyzeStock()">
+        <button class="analyzer-btn" onclick="analyzeStock()">Analyze →</button>
+      </div>
+
+      <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+        <div style="margin-top:12px;font-size:12px;">Analyzing across 10 parameters...</div>
+      </div>
+
+      <div class="score-display" id="scoreDisplay">
+        <div class="section-card">
+          <div class="score-hero">
+            <div class="score-name" id="scoreName"></div>
+            <div style="margin:12px 0">
+              <span class="score-number" id="scoreNumber"></span><span class="score-max">/50</span>
+            </div>
+            <div class="score-verdict" id="scoreVerdict"></div>
+          </div>
+          <div class="score-grid" id="scoreGrid"></div>
+          <div class="score-analysis" id="scoreAnalysis"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;padding:14px;background:var(--card2);border-radius:6px;border:1px solid var(--border)">
+        <div style="font-size:10px;color:var(--grey);font-weight:700;letter-spacing:1px;margin-bottom:8px;">OUR 10 PARAMETERS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div style="font-size:11px;color:var(--text)">1. Business Quality / Moat</div>
+          <div style="font-size:11px;color:var(--text)">2. Earnings Growth (3yr PAT CAGR)</div>
+          <div style="font-size:11px;color:var(--text)">3. Return on Equity (ROE)</div>
+          <div style="font-size:11px;color:var(--text)">4. Balance Sheet Strength</div>
+          <div style="font-size:11px;color:var(--text)">5. Promoter Quality & Governance</div>
+          <div style="font-size:11px;color:var(--text)">6. Valuation (PEG-based)</div>
+          <div style="font-size:11px;color:var(--text)">7. Sector Tailwind (10yr runway)</div>
+          <div style="font-size:11px;color:var(--text)">8. Management Execution</div>
+          <div style="font-size:11px;color:var(--text)">9. Cash Flow Quality (FCF)</div>
+          <div style="font-size:11px;color:var(--text)">10. Conviction / 10yr Visibility</div>
+        </div>
+        <div style="margin-top:10px;font-size:10px;color:var(--grey)">Score guide: 5=Excellent · 4=Good · 3=Average · 2=Weak · 1=Poor &nbsp;|&nbsp; ≥40=Strong Buy · 32-39=Buy · 25-31=Hold · &lt;25=Avoid</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     CALCULATORS
+═══════════════════════════════════ -->
+<div id="page-calculators" class="page">
+  <div class="calc-grid">
+    <!-- SIP Calculator -->
+    <div class="calc-box">
+      <div class="calc-title">📈 SIP Calculator</div>
+      <div class="calc-field"><div class="calc-label">Monthly SIP Amount (₹)</div><input class="calc-input" id="sipAmount" type="number" value="30000" placeholder="30000"></div>
+      <div class="calc-field"><div class="calc-label">Expected Annual Return (%)</div><input class="calc-input" id="sipRate" type="number" value="18" placeholder="18"></div>
+      <div class="calc-field"><div class="calc-label">Time Period (Years)</div><input class="calc-input" id="sipYears" type="number" value="10" placeholder="10"></div>
+      <button class="calc-btn" onclick="calcSIP()">Calculate SIP Returns →</button>
+      <div class="calc-result" id="sipResult" style="display:none">
+        <div class="calc-result-label">Corpus at Maturity</div>
+        <div class="calc-result-value" id="sipFV"></div>
+        <div class="calc-result-sub" id="sipSub"></div>
+      </div>
+    </div>
+
+    <!-- Lumpsum Calculator -->
+    <div class="calc-box">
+      <div class="calc-title">💰 Lumpsum Calculator</div>
+      <div class="calc-field"><div class="calc-label">Investment Amount (₹)</div><input class="calc-input" id="lsAmount" type="number" value="5000000" placeholder="5000000"></div>
+      <div class="calc-field"><div class="calc-label">Expected Annual Return (%)</div><input class="calc-input" id="lsRate" type="number" value="18" placeholder="18"></div>
+      <div class="calc-field"><div class="calc-label">Time Period (Years)</div><input class="calc-input" id="lsYears" type="number" value="10" placeholder="10"></div>
+      <button class="calc-btn" onclick="calcLS()">Calculate Lumpsum Returns →</button>
+      <div class="calc-result" id="lsResult" style="display:none">
+        <div class="calc-result-label">Future Value</div>
+        <div class="calc-result-value" id="lsFV"></div>
+        <div class="calc-result-sub" id="lsSub"></div>
+      </div>
+    </div>
+
+    <!-- Goal Calculator -->
+    <div class="calc-box">
+      <div class="calc-title">🎯 Goal Calculator — What CAGR do I need?</div>
+      <div class="calc-field"><div class="calc-label">Current Corpus (₹)</div><input class="calc-input" id="goalCorpus" type="number" value="6872369" placeholder="6872369"></div>
+      <div class="calc-field"><div class="calc-label">Target Amount (₹)</div><input class="calc-input" id="goalTarget" type="number" value="70000000" placeholder="70000000"></div>
+      <div class="calc-field"><div class="calc-label">Time Period (Years)</div><input class="calc-input" id="goalYears" type="number" value="10" placeholder="10"></div>
+      <button class="calc-btn" onclick="calcGoal()">Calculate Required CAGR →</button>
+      <div class="calc-result" id="goalResult" style="display:none">
+        <div class="calc-result-label">Required CAGR</div>
+        <div class="calc-result-value" id="goalCAGR"></div>
+        <div class="calc-result-sub" id="goalSub"></div>
+      </div>
+    </div>
+
+    <!-- CAGR Calculator -->
+    <div class="calc-box">
+      <div class="calc-title">📊 CAGR Calculator — How am I doing?</div>
+      <div class="calc-field"><div class="calc-label">Amount Invested (₹)</div><input class="calc-input" id="cagrInv" type="number" value="2047654" placeholder="2047654"></div>
+      <div class="calc-field"><div class="calc-label">Current Value (₹)</div><input class="calc-input" id="cagrCur" type="number" value="2786447" placeholder="2786447"></div>
+      <div class="calc-field"><div class="calc-label">Years Held</div><input class="calc-input" id="cagrYears" type="number" value="3" placeholder="3"></div>
+      <button class="calc-btn" onclick="calcCAGR()">Calculate My CAGR →</button>
+      <div class="calc-result" id="cagrResult" style="display:none">
+        <div class="calc-result-label">Your CAGR</div>
+        <div class="calc-result-value" id="cagrVal"></div>
+        <div class="calc-result-sub" id="cagrSub"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SIP TRACKER
+═══════════════════════════════════ -->
+<div id="page-siptracker" class="page">
+  <div class="section-card" style="margin-bottom:16px">
+    <div class="section-head"><h3>Monthly SIP & Investment Tracker</h3><span class="badge" style="background:var(--blue-dim);color:var(--blue)" id="currentMonth"></span></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);">
+      <div class="sip-header">INSTRUMENT</div>
+      <div class="sip-header">AMOUNT</div>
+      <div class="sip-header">TYPE</div>
+      <div class="sip-header" style="text-align:center">DONE THIS MONTH ✅</div>
+    </div>
+    <div id="sipRows"></div>
+    <div style="padding:14px 18px;border-top:2px solid var(--border2);display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:12px;font-weight:700;color:var(--gold)">Total Monthly Commitments</div>
+      <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--gold)">₹50,000 – ₹70,000</div>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="section-head"><h3>Monthly Progress</h3></div>
+    <div style="padding:16px 20px" id="sipProgress"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     TRADE LOG
+═══════════════════════════════════ -->
+<div id="page-tradelog" class="page">
+  <div class="section-card">
+    <div class="section-head"><h3>Trade Log · Every Transaction Recorded</h3><span class="badge" style="background:var(--blue-dim);color:var(--blue)">Tax record + audit trail</span></div>
+    <div class="trade-form">
+      <div class="trade-field"><label>Date</label><input type="date" id="trDate"></div>
+      <div class="trade-field"><label>Stock</label><input type="text" id="trStock" placeholder="CAMS"></div>
+      <div class="trade-field"><label>Buy / Sell</label><select id="trType"><option>BUY</option><option>SELL</option></select></div>
+      <div class="trade-field"><label>Qty</label><input type="number" id="trQty" placeholder="10"></div>
+      <div class="trade-field"><label>Price (₹)</label><input type="number" id="trPrice" placeholder="780"></div>
+      <div class="trade-field"><label>Reason</label><input type="text" id="trReason" placeholder="Core position entry"></div>
+      <button class="add-trade-btn" onclick="addTrade()">+ Add Trade</button>
+    </div>
+    <div class="table-wrap">
+      <table class="full-table" id="tradeTable">
+        <thead><tr><th>DATE</th><th>STOCK</th><th>B/S</th><th class="right">QTY</th><th class="right">PRICE ₹</th><th class="right">AMOUNT ₹</th><th>REASON</th></tr></thead>
+        <tbody id="tradeTbody">
+          <tr>
+            <td style="color:var(--gold);font-family:'Space Mono',monospace;font-size:11px;">Jun 30 2026</td>
+            <td class="stock-name">IGIL</td>
+            <td><span class="badge-done">BUY</span></td>
+            <td class="mono">49</td>
+            <td class="mono">350.00</td>
+            <td class="pos">17,150</td>
+            <td class="note">Core position top-up. Strong conviction at ₹350. New avg ₹354.73.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="padding:12px 18px;display:flex;justify-content:space-between;font-size:11px;color:var(--grey);font-style:italic;">
+      <span>Tip: Log every trade immediately. This is your tax record.</span>
+      <span id="tradeCount">1 trade logged</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ──────────────────────────────────────────────
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if(el) el.classList.add('active');
+}
+
+function toggleCheck(el) { el.classList.toggle('checked'); updateSIPProgress(); }
+
+function filterTable(input, tbodyId) {
+  const q = input.value.toLowerCase();
+  document.getElementById(tbodyId).querySelectorAll('tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── SIP TRACKER ──────────────────────────────────────────────
+const sipItems = [
+  {name:'Parag Parikh Flexi Cap',  amount:'₹5,000',  type:'MF SIP',    id:'sip1'},
+  {name:'ICICI Midcap 150 Index',  amount:'₹2,000',  type:'MF SIP',    id:'sip2'},
+  {name:'ICICI Smallcap 250 Index',amount:'₹5,000',  type:'MF SIP',    id:'sip3'},
+  {name:'NPS Contribution',        amount:'₹5,000',  type:'NPS',       id:'sip4'},
+  {name:'PPF Contribution',        amount:'₹5,000',  type:'PPF',       id:'sip5'},
+  {name:'Monthly Extra → Equity',  amount:'₹25,000', type:'Equity',    id:'sip6'},
+  {name:'Fresh Capital Tranche',   amount:'Variable', type:'Lumpsum',  id:'sip7'},
+  {name:'Kaynes Limit Buy',        amount:'₹20,000', type:'Conditional',id:'sip8'},
+];
+
+function initSIPTracker() {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now = new Date();
+  document.getElementById('currentMonth').textContent = months[now.getMonth()] + ' ' + now.getFullYear();
+
+  let html = '';
+  sipItems.forEach(item => {
+    const done = localStorage.getItem ? (localStorage.getItem(item.id) === 'true') : false;
+    html += `<div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);">
+      <div class="sip-cell sip-name">${item.name}</div>
+      <div class="sip-cell sip-amount">${item.amount}</div>
+      <div class="sip-cell" style="color:var(--grey);font-size:11px;">${item.type}</div>
+      <div class="sip-cell sip-check">
+        <div class="sip-tick${done?' done':''}" onclick="toggleSIP(this,'${item.id}')">${done?'✓':''}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('sipRows').innerHTML = html;
+  updateSIPProgress();
+}
+
+function toggleSIP(el, id) {
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '✓' : '';
+  try { localStorage.setItem(id, el.classList.contains('done')); } catch(e){}
+  updateSIPProgress();
+}
+
+function updateSIPProgress() {
+  const ticks = document.querySelectorAll('.sip-tick');
+  const done = document.querySelectorAll('.sip-tick.done').length;
+  const total = ticks.length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  const el = document.getElementById('sipProgress');
+  if(el) {
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:12px;color:var(--text)">${done} of ${total} completed this month</span>
+        <span style="font-family:'Space Mono',monospace;font-size:13px;color:var(--gold)">${pct}%</span>
+      </div>
+      <div style="height:10px;background:var(--surface);border-radius:5px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:5px;transition:width 0.5s;"></div>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:var(--grey);">${pct===100?'🎉 All done this month! Great discipline.':pct>=50?'Halfway there. Keep going.':'Get the non-negotiables done first — SIPs, NPS, PPF.'}</div>`;
+  }
+}
+
+// ── CALCULATORS ──────────────────────────────────────────────
+function fmtINR(n) {
+  if(n>=10000000) return '₹' + (n/10000000).toFixed(2) + ' Cr';
+  if(n>=100000)   return '₹' + (n/100000).toFixed(2) + ' L';
+  return '₹' + Math.round(n).toLocaleString('en-IN');
+}
+
+function calcSIP() {
+  const P = parseFloat(document.getElementById('sipAmount').value);
+  const r = parseFloat(document.getElementById('sipRate').value)/100/12;
+  const n = parseFloat(document.getElementById('sipYears').value)*12;
+  const FV = P * ((Math.pow(1+r,n)-1)/r) * (1+r);
+  const invested = P*n;
+  document.getElementById('sipFV').textContent = fmtINR(FV);
+  document.getElementById('sipSub').textContent = `Invested: ${fmtINR(invested)} · Gain: ${fmtINR(FV-invested)} · ${((FV/invested-1)*100).toFixed(1)}% total return`;
+  document.getElementById('sipResult').style.display='block';
+}
+
+function calcLS() {
+  const P = parseFloat(document.getElementById('lsAmount').value);
+  const r = parseFloat(document.getElementById('lsRate').value)/100;
+  const n = parseFloat(document.getElementById('lsYears').value);
+  const FV = P * Math.pow(1+r,n);
+  document.getElementById('lsFV').textContent = fmtINR(FV);
+  document.getElementById('lsSub').textContent = `Invested: ${fmtINR(P)} · Gain: ${fmtINR(FV-P)} · ${((FV/P-1)*100).toFixed(1)}% total return`;
+  document.getElementById('lsResult').style.display='block';
+}
+
+function calcGoal() {
+  const PV = parseFloat(document.getElementById('goalCorpus').value);
+  const FV = parseFloat(document.getElementById('goalTarget').value);
+  const n  = parseFloat(document.getElementById('goalYears').value);
+  const cagr = (Math.pow(FV/PV,1/n)-1)*100;
+  const el = document.getElementById('goalCAGR');
+  el.textContent = cagr.toFixed(2) + '%';
+  el.style.color = cagr>25?'var(--red)':cagr>18?'var(--orange)':'var(--green)';
+  document.getElementById('goalSub').textContent = cagr>25?'Aggressive — needs concentrated bets to fire.':cagr>18?'Challenging but achievable with our 15-stock plan.':'Realistic. Solid execution will get you there.';
+  document.getElementById('goalResult').style.display='block';
+}
+
+function calcCAGR() {
+  const inv = parseFloat(document.getElementById('cagrInv').value);
+  const cur = parseFloat(document.getElementById('cagrCur').value);
+  const yr  = parseFloat(document.getElementById('cagrYears').value);
+  const cagr = (Math.pow(cur/inv,1/yr)-1)*100;
+  document.getElementById('cagrVal').textContent = cagr.toFixed(2) + '%';
+  document.getElementById('cagrSub').textContent = `${fmtINR(inv)} → ${fmtINR(cur)} in ${yr} years · Absolute return: ${((cur/inv-1)*100).toFixed(1)}%`;
+  document.getElementById('cagrResult').style.display='block';
+}
+
+// ── TRADE LOG ──────────────────────────────────────────────
+let tradeCount = 1;
+function addTrade() {
+  const date   = document.getElementById('trDate').value;
+  const stock  = document.getElementById('trStock').value;
+  const type   = document.getElementById('trType').value;
+  const qty    = parseFloat(document.getElementById('trQty').value);
+  const price  = parseFloat(document.getElementById('trPrice').value);
+  const reason = document.getElementById('trReason').value;
+  if(!stock||!qty||!price){alert('Please fill Stock, Qty and Price');return;}
+  const amount = qty*price;
+  const badge  = type==='BUY'?'<span class="badge-done">BUY</span>':'<span class="badge-exit">SELL</span>';
+  const amtClass = type==='BUY'?'pos':'neg';
+  const sign = type==='BUY'?'':'-';
+  const row = `<tr>
+    <td style="color:var(--gold);font-family:'Space Mono',monospace;font-size:11px;">${date||'—'}</td>
+    <td class="stock-name">${stock.toUpperCase()}</td>
+    <td>${badge}</td>
+    <td class="mono">${qty}</td>
+    <td class="mono">${price.toFixed(2)}</td>
+    <td class="${amtClass}">${sign}${amount.toLocaleString('en-IN')}</td>
+    <td class="note">${reason||'—'}</td>
+  </tr>`;
+  document.getElementById('tradeTbody').insertAdjacentHTML('afterbegin',row);
+  tradeCount++;
+  document.getElementById('tradeCount').textContent = tradeCount+' trades logged';
+  ['trDate','trStock','trQty','trPrice','trReason'].forEach(id=>document.getElementById(id).value='');
+}
+
+// ── STOCK ANALYZER (Groq AI) ──────────────────────────────────
+const GROQ_API_KEY = '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';
+
+async function analyzeStock() {
+  const stock = document.getElementById('stockInput').value.trim();
+  if(!stock){alert('Please enter a stock name');return;}
+
+  document.getElementById('scoreDisplay').style.display='none';
+  document.getElementById('loadingSpinner').style.display='block';
+
+  const params = ['Business Quality/Moat','Earnings Growth','Return on Equity','Balance Sheet','Promoter Quality','Valuation (PEG)','Sector Tailwind','Management Execution','Cash Flow Quality','10yr Conviction'];
+
+  const prompt = `You are a senior Indian equity analyst. Score "${stock}" (Indian stock) across these 10 parameters on a scale of 1-5 each (5=Excellent, 1=Poor):
+1. Business Quality/Moat
+2. Earnings Growth (3yr PAT CAGR)
+3. Return on Equity (ROE)
+4. Balance Sheet Strength (Debt)
+5. Promoter Quality & Governance
+6. Valuation (PEG-based)
+7. Sector Tailwind (10yr runway)
+8. Management Execution
+9. Cash Flow Quality (FCF)
+10. 10-Year Conviction/Visibility
+
+Respond ONLY with valid JSON, no markdown formatting, no other text, in this exact format:
+{"name":"Full Company Name","ticker":"NSE_TICKER","scores":[s1,s2,s3,s4,s5,s6,s7,s8,s9,s10],"total":sum,"verdict":"STRONG BUY|BUY|WATCH|AVOID","verdict_color":"#2ECC71","analysis":"2-3 sentence analysis mentioning key strengths, risks, and fit for a concentrated long-term Indian equity portfolio targeting 18-21% CAGR.","entry_zone":"Suggested entry price range for Indian retail investor"}`;
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer ' + GROQ_API_KEY
+      },
+      body:JSON.stringify({
+        model:'llama-3.3-70b-versatile',
+        messages:[{role:'user',content:prompt}],
+        temperature:0.3,
+        max_tokens:1000
+      })
+    });
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message || 'Groq API error');
+
+    let text = data.choices[0].message.content.trim();
+    text = text.replace(/```json|```/g,'').trim();
+    const result = JSON.parse(text);
+
+    document.getElementById('scoreName').textContent = result.name + (result.ticker?' ('+result.ticker+')':'');
+    document.getElementById('scoreNumber').textContent = result.total;
+    document.getElementById('scoreNumber').style.color = result.verdict_color;
+    document.getElementById('scoreVerdict').textContent = result.verdict;
+    document.getElementById('scoreVerdict').style.color = result.verdict_color;
+    document.getElementById('scoreAnalysis').innerHTML =
+      `<strong style="color:var(--gold)">Analysis:</strong> ${result.analysis}` +
+      (result.entry_zone?`<br><br><strong style="color:var(--gold)">Entry Zone:</strong> <span style="font-family:'Space Mono',monospace;color:var(--green)">${result.entry_zone}</span>`:'');
+
+    let gridHtml='';
+    const scoreColors={5:'var(--green)',4:'#7EE787',3:'var(--grey)',2:'var(--orange)',1:'var(--red)'};
+    const barColors={5:'var(--green)',4:'var(--green)',3:'var(--gold)',2:'var(--orange)',1:'var(--red)'};
+    result.scores.forEach((s,i)=>{
+      gridHtml+=`<div class="score-param">
+        <div class="score-param-label">${params[i]}</div>
+        <div class="score-param-val" style="color:${scoreColors[s]||'var(--grey)'}">${s}</div>
+        <div class="score-bar-wrap"><div class="score-bar-track"><div class="score-bar-fill" style="width:${s*20}%;background:${barColors[s]||'var(--grey)'}"></div></div></div>
+      </div>`;
+    });
+    document.getElementById('scoreGrid').innerHTML = gridHtml;
+    document.getElementById('loadingSpinner').style.display='none';
+    document.getElementById('scoreDisplay').style.display='block';
+  } catch(err) {
+    document.getElementById('loadingSpinner').style.display='none';
+    document.getElementById('scoreDisplay').style.display='block';
+    document.getElementById('scoreDisplay').innerHTML=`<div style="padding:24px;text-align:center;color:var(--red)">Analysis failed. Please try again.<br><small style="color:var(--grey)">${err.message}</small></div>`;
+  }
+}
+
+// ── MORNING BRIEFING ENGINE ──────────────────────────────────
+// Tracked stocks with our pre-set rules (buy zones, stop-losses, watch triggers)
+const trackedStocks = [
+  {name:'CAMS',     atp:801.19,  shares:100, buyZone:[750,780], stopLoss:null,  note:'Highest conviction. Add ₹50K at ₹780.'},
+  {name:'IGIL',     atp:354.73,  shares:473, buyZone:[340,360], stopLoss:null,  note:'Core position. Add on dips.'},
+  {name:'KAYNES',   atp:3399.79, shares:52,  buyZone:[3050,3100],stopLoss:null, note:'Limit buy ₹3,100 live. Q1 FY27 critical.'},
+  {name:'WAAREE',   atp:3008.38, shares:33,  buyZone:null,      stopLoss:2700, note:'Exit on bounce to ₹3,100+. Hard stop ₹2,700.'},
+  {name:'VINATI',   atp:null,    shares:0,   buyZone:[1200,1300],stopLoss:null,note:'Watchlist. Alert at ₹1,280.'},
+  {name:'INFY',     atp:1051.72, shares:50,  buyZone:[950,1000], stopLoss:null, note:'Results Jul 17-19. Add if guidance positive.'},
+  {name:'HDFCBANK', atp:769.90,  shares:280, buyZone:[750,790],  stopLoss:null, note:'Safe compounder. Add on dips.'},
+  {name:'CDSL',     atp:1405.45, shares:273, buyZone:null,       stopLoss:null, note:'Largest position. No addition pre-results.'},
+  {name:'MM',       atp:971.36,  shares:107, buyZone:null,       stopLoss:null, note:'Legacy holding. Hold.'},
+];
+
+function initPriceInputs() {
+  let html = '';
+  trackedStocks.forEach(s => {
+    html += `<div class="calc-field" style="margin-bottom:0;">
+      <div class="calc-label">${s.name}</div>
+      <input class="calc-input" id="price_${s.name}" type="number" placeholder="LTP" style="font-size:12px;padding:7px 10px;">
+    </div>`;
+  });
+  document.getElementById('priceInputGrid').innerHTML = html;
+
+  const dateStr = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('briefingDate').textContent = dateStr;
+}
+
+function generateBriefing() {
+  const lines = [];
+  let totalPnlChange = 0;
+  let anyPriceEntered = false;
+
+  trackedStocks.forEach(s => {
+    const inputEl = document.getElementById('price_'+s.name);
+    const price = parseFloat(inputEl.value);
+    if(isNaN(price) || price<=0) return;
+    anyPriceEntered = true;
+
+    if(s.atp && s.shares) {
+      const dayPnl = (price - s.atp) * s.shares;
+      totalPnlChange += 0; // we don't have prior day close, so skip day change calc
+    }
+
+    // Stop loss check
+    if(s.stopLoss && price <= s.stopLoss) {
+      lines.push({type:'red', text:`🔴 ${s.name}: ₹${price} — AT OR BELOW STOP-LOSS ₹${s.stopLoss}. Action: EXIT NOW.`});
+    } else if(s.stopLoss && price <= s.stopLoss*1.06) {
+      lines.push({type:'orange', text:`🟠 ${s.name}: ₹${price} — approaching stop-loss ₹${s.stopLoss}. Watching closely.`});
+    }
+
+    // Buy zone check
+    if(s.buyZone) {
+      if(price >= s.buyZone[0] && price <= s.buyZone[1]) {
+        lines.push({type:'green', text:`🟢 ${s.name}: ₹${price} — IN BUY ZONE (₹${s.buyZone[0]}-${s.buyZone[1]}). ${s.note}`});
+      } else if(price < s.buyZone[1]*1.03 && price > s.buyZone[1]) {
+        lines.push({type:'gold', text:`🟡 ${s.name}: ₹${price} — approaching buy zone (₹${s.buyZone[0]}-${s.buyZone[1]}).`});
+      }
+    }
+  });
+
+  const today = new Date().toLocaleDateString('en-IN',{weekday:'long'});
+  let html = `<div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:14px;">Morning Raman ☀️ — ${today}</div>`;
+
+  if(!anyPriceEntered) {
+    html += `<div style="font-size:12px;color:var(--grey);">No prices entered yet. Type today's LTPs above and tap Generate.</div>`;
+  } else if(lines.length === 0) {
+    html += `<div style="font-size:13px;color:var(--green);">✅ No alerts today. All tracked stocks within normal range. No action required.</div>`;
+  } else {
+    lines.forEach(l => {
+      const color = l.type==='red'?'var(--red)':l.type==='orange'?'var(--orange)':l.type==='green'?'var(--green)':'var(--gold)';
+      html += `<div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:${color};font-weight:600;">${l.text}</div>`;
+    });
+  }
+
+  // Next result reminder (static, update monthly)
+  html += `<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border2);font-size:11px;color:var(--grey);">
+    <strong style="color:var(--gold)">Next result:</strong> Infosys — Jul 17-19 &nbsp;|&nbsp; CAMS — Jul 22-25 &nbsp;|&nbsp; Kaynes — Jul 23-26
+  </div>`;
+
+  document.getElementById('briefingContent').innerHTML = html;
+  document.getElementById('briefingCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  initSIPTracker();
+  initPriceInputs();
+  // Set today's date in trade form
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('trDate').value = today;
+});
+</script>
+</body>
+</html>
